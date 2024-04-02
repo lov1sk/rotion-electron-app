@@ -2,9 +2,10 @@ import { Link } from "react-router-dom";
 
 export function Blank() {
   return (
-    <div>
-      <h1 className="text-rotion-100 text-5xl">Hello</h1>
-      <Link to="/document">CLique aqui</Link>
+    <div className="h-full grid place-content-center">
+      <Link to="/document" className="text-rotion-300 text-sm">
+        Selecione ou crie um novo documento
+      </Link>
     </div>
   );
 }

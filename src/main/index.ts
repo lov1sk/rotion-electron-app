@@ -1,18 +1,29 @@
-import { app, shell, BrowserWindow, ipcMain } from "electron";
-import { join, resolve } from "node:path";
+import { app, shell, BrowserWindow } from "electron";
+import path, { join, resolve } from "node:path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
-import icon from "../../resources/icon.png?asset";
+import icon from "../../resources/icon.png";
 import { createURLRoute, createFileRoute } from "electron-router-dom";
+import "./ipc";
+import "./store";
+import { createTray } from "./tray";
 
 function createWindow({ id }: { id: string }): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
+    minWidth: 650,
     height: 670,
     show: false,
     autoHideMenuBar: true,
-    frame: false,
-    titleBarStyle: "hiddenInset",
+    icon: path.resolve(__dirname, "..", "..", "resources", "icon.png"),
+    titleBarOverlay:
+      process.platform != "darwin"
+        ? {
+            color: "#2f324100",
+            symbolColor: "#c1bfc7",
+          }
+        : false,
+    titleBarStyle: process.platform == "darwin" ? "hiddenInset" : "hidden",
     trafficLightPosition: {
       x: 20,
       y: 20,
@@ -25,6 +36,7 @@ function createWindow({ id }: { id: string }): void {
     },
   });
 
+  createTray(mainWindow);
   // O arquivo que será carregado caso estejamos no ambiente de desenvolvimento
   // Estou pa
   const devServerURL = createURLRoute("http://localhost:5173", id);
